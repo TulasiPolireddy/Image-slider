@@ -1,9 +1,9 @@
 // Initial list of demo images
 let images = [
-  'pic1.jpg',
-  'pic2.jpg',
-  'pic3.jpg',
-  'pic4.jpg'
+  'pic1.jpg.jpg',
+  'pic2.jpg.jpg',
+  'pic3.jpg.jpg',
+  'pic4.jpg.jpg'
 ];
 
 let currentIndex = 0;
