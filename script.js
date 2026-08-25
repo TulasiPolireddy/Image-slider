@@ -1,172 +1,169 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+// Initial list of demo images
+let images = [
+  'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1000',
+  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1000',
+  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1000',
+  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1000'
+];
+
+let currentIndex = 0;
+let currentZoom = 1;
+let autoPlayInterval = null;
+
+// DOM Elements
+const mainImage = document.getElementById('mainImage');
+const thumbnailContainer = document.getElementById('thumbnailContainer');
+const imageCounter = document.getElementById('imageCounter');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+// Zoom Buttons
+const zoomInBtn = document.getElementById('zoomInBtn');
+const zoomOutBtn = document.getElementById('zoomOutBtn');
+const resetZoomBtn = document.getElementById('resetZoomBtn');
+
+// Action Buttons
+const autoPlayBtn = document.getElementById('autoPlayBtn');
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+const deleteBtn = document.getElementById('deleteBtn');
+const sliderContainer = document.getElementById('sliderContainer');
+
+// Input Elements
+const addUrlBtn = document.getElementById('addUrlBtn');
+const imageUrlInput = document.getElementById('imageUrlInput');
+const fileInput = document.getElementById('fileInput');
+
+// 1. Initialize Slider
+function updateSlider() {
+  if (images.length === 0) {
+    mainImage.src = 'https://via.placeholder.com/800x500?text=No+Images+Available';
+    imageCounter.textContent = '0 / 0';
+    thumbnailContainer.innerHTML = '';
+    return;
+  }
+
+  // Ensure index is in bounds
+  if (currentIndex >= images.length) currentIndex = 0;
+  if (currentIndex < 0) currentIndex = images.length - 1;
+
+  mainImage.src = images[currentIndex];
+  imageCounter.textContent = `${currentIndex + 1} / ${images.length}`;
+  resetZoom();
+  renderThumbnails();
 }
 
-body {
-  background-color: #0f172a;
-  color: #fff;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+// 2. Render Thumbnails
+function renderThumbnails() {
+  thumbnailContainer.innerHTML = '';
+  images.forEach((imgUrl, index) => {
+    const thumb = document.createElement('img');
+    thumb.src = imgUrl;
+    thumb.classList.add('thumbnail-item');
+    if (index === currentIndex) thumb.classList.add('active');
+
+    thumb.addEventListener('click', () => {
+      currentIndex = index;
+      updateSlider();
+    });
+
+    thumbnailContainer.appendChild(thumb);
+  });
 }
 
-.slider-container {
-  width: 100%;
-  max-width: 900px;
-  background-color: #1e293b;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
+// 3. Navigation
+prevBtn.addEventListener('click', () => {
+  if (images.length === 0) return;
+  currentIndex--;
+  updateSlider();
+});
+
+nextBtn.addEventListener('click', () => {
+  if (images.length === 0) return;
+  currentIndex++;
+  updateSlider();
+});
+
+// 4. Zoom Controls
+function applyZoom() {
+  mainImage.style.transform = `scale(${currentZoom})`;
 }
 
-/* Toolbar */
-.toolbar {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 16px;
-  background-color: #0f172a;
-  border-bottom: 1px solid #334155;
-}
+zoomInBtn.addEventListener('click', () => {
+  if (currentZoom < 3) {
+    currentZoom += 0.2;
+    applyZoom();
+  }
+});
 
-.toolbar button {
-  background: #334155;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  margin-right: 5px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
+zoomOutBtn.addEventListener('click', () => {
+  if (currentZoom > 0.6) {
+    currentZoom -= 0.2;
+    applyZoom();
+  }
+});
 
-.toolbar button:hover {
-  background: #475569;
+function resetZoom() {
+  currentZoom = 1;
+  applyZoom();
 }
+resetZoomBtn.addEventListener('click', resetZoom);
 
-.toolbar button.danger:hover {
-  background: #ef4444;
-}
+// 5. Add Image via URL
+addUrlBtn.addEventListener('click', () => {
+  const url = imageUrlInput.value.trim();
+  if (url) {
+    images.push(url);
+    currentIndex = images.length - 1;
+    imageUrlInput.value = '';
+    updateSlider();
+  }
+});
 
-/* Main Viewport */
-.image-viewport {
-  position: relative;
-  width: 100%;
-  height: 480px;
-  background-color: #000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
+// 6. Add Image via Local File Upload
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      images.push(event.target.result);
+      currentIndex = images.length - 1;
+      updateSlider();
+    };
+    reader.readAsDataURL(file);
+  }
+});
 
-#mainImage {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  transition: transform 0.2s ease-out;
-}
+// 7. Delete Current Image
+deleteBtn.addEventListener('click', () => {
+  if (images.length === 0) return;
+  images.splice(currentIndex, 1);
+  if (currentIndex > 0) currentIndex--;
+  updateSlider();
+});
 
-.nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  border: none;
-  font-size: 20px;
-  padding: 14px 18px;
-  cursor: pointer;
-  border-radius: 50%;
-  transition: 0.3s;
-}
+// 8. Autoplay
+autoPlayBtn.addEventListener('click', () => {
+  if (autoPlayInterval) {
+    clearInterval(autoPlayInterval);
+    autoPlayInterval = null;
+    autoPlayBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+  } else {
+    autoPlayInterval = setInterval(() => {
+      currentIndex++;
+      updateSlider();
+    }, 2500);
+    autoPlayBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+  }
+});
 
-.nav-btn:hover {
-  background: rgba(255, 255, 255, 0.8);
-  color: black;
-}
+// 9. Fullscreen Mode
+fullscreenBtn.addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    sliderContainer.requestFullscreen().catch(err => alert(err.message));
+  } else {
+    document.exitFullscreen();
+  }
+});
 
-.prev { left: 15px; }
-.next { right: 15px; }
-
-.image-counter {
-  position: absolute;
-  bottom: 12px;
-  left: 15px;
-  background: rgba(0,0,0,0.6);
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 13px;
-}
-
-/* Thumbnails */
-.thumbnails {
-  display: flex;
-  gap: 10px;
-  padding: 12px;
-  overflow-x: auto;
-  background: #0f172a;
-}
-
-.thumbnail-item {
-  width: 70px;
-  height: 50px;
-  border-radius: 6px;
-  cursor: pointer;
-  object-fit: cover;
-  opacity: 0.5;
-  border: 2px solid transparent;
-  transition: 0.2s;
-  flex-shrink: 0;
-}
-
-.thumbnail-item.active {
-  opacity: 1;
-  border-color: #38bdf8;
-}
-
-/* Add Image Controls */
-.add-image-panel {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 15px;
-  background-color: #1e293b;
-  border-top: 1px solid #334155;
-}
-
-.add-image-panel input[type="text"] {
-  flex: 1;
-  min-width: 200px;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #475569;
-  background: #0f172a;
-  color: white;
-  outline: none;
-}
-
-.add-image-panel button,
-.upload-btn {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.add-image-panel button:hover,
-.upload-btn:hover {
-  background: #1d4ed8;
-}
+// Initialize on Load
+updateSlider();
