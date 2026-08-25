@@ -3,32 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive Image Slider</title>
+  <title>Advanced Image Slider</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-  <div class="slider-container">
-    <!-- Slides -->
-    <div class="slide active">
-      <img src="https://picsum.photos/id/1018/1000/600" alt="Slide 1">
-      <div class="caption">Slide 1: Beautiful Landscape</div>
-    </div>
-    <div class="slide">
-      <img src="https://picsum.photos/id/1015/1000/600" alt="Slide 2">
-      <div class="caption">Slide 2: River Canyon</div>
-    </div>
-    <div class="slide">
-      <img src="https://picsum.photos/id/1019/1000/600" alt="Slide 3">
-      <div class="caption">Slide 3: Ocean Waves</div>
+  <div class="slider-container" id="sliderContainer">
+    <!-- Slider Header / Tools -->
+    <div class="toolbar">
+      <div class="zoom-tools">
+        <button id="zoomInBtn" title="Zoom In"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+        <button id="zoomOutBtn" title="Zoom Out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+        <button id="resetZoomBtn" title="Reset Zoom"><i class="fa-solid fa-arrows-rotate"></i></button>
+      </div>
+
+      <div class="action-tools">
+        <button id="autoPlayBtn" title="Autoplay"><i class="fa-solid fa-play"></i></button>
+        <button id="fullscreenBtn" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+        <button id="deleteBtn" class="danger" title="Delete Image"><i class="fa-solid fa-trash"></i></button>
+      </div>
     </div>
 
-    <!-- Navigation Buttons -->
-    <button class="nav-btn prev-btn" id="prevBtn">&#10094;</button>
-    <button class="nav-btn next-btn" id="nextBtn">&#10095;</button>
+    <!-- Main Image Display -->
+    <div class="image-viewport" id="imageViewport">
+      <img id="mainImage" src="" alt="Slider Image">
+      <button class="nav-btn prev" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="nav-btn next" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="image-counter" id="imageCounter">1 / 1</div>
+    </div>
 
-    <!-- Indicator Dots -->
-    <div class="dots-container" id="dotsContainer"></div>
+    <!-- Thumbnails Strip -->
+    <div class="thumbnails" id="thumbnailContainer"></div>
+
+    <!-- Add Image Bar -->
+    <div class="add-image-panel">
+      <input type="text" id="imageUrlInput" placeholder="Paste image URL here...">
+      <button id="addUrlBtn"><i class="fa-solid fa-plus"></i> Add via URL</button>
+      
+      <label class="upload-btn">
+        <i class="fa-solid fa-upload"></i> Upload Local File
+        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+      </label>
+    </div>
   </div>
 
   <script src="script.js"></script>
