@@ -1,9 +1,9 @@
 // Initial list of demo images
 let images = [
-  'https://wallpapers-clan.com/wp-content/uploads/2025/08/nezuko-in-a-chibi-demon-form-desktop-wallpaper-cover.jpg',
-  'https://wallpapers-clan.com/wp-content/uploads/2025/05/zenitsu-smiling-demon-slayer-yellow-desktop-wallpaper-cover.jpg',
-  'https://wallpapers-clan.com/wp-content/uploads/2024/06/demon-slayer-tanjiro-smile-turquoise-desktop-wallpaper-preview.jpg',
-  'https://images8.alphacoders.com/136/1368293.jpeg'
+  'pic4.jpg',
+  'pic3.jpg',
+  'pic1.jpg',
+  'pic2.jpg'.
 ];
 
 let currentIndex = 0;
