@@ -1,6 +1,6 @@
 // Initial list of demo images
 let images = [
-  'pic1.jpg.jpg',
+  'https://github.com/TulasiPolireddy/Image-slider/blob/main/pic1.jpg.jpg',
   'pic2.jpg.jpg',
   'pic3.jpg.jpg',
   'pic4.jpg.jpg'
